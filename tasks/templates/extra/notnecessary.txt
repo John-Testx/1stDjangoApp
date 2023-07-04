@@ -1,0 +1,13 @@
+{% comment %} <label for="id_task2">Task: </label>
+<select name="task2" required id="id_task2">
+{% for tas in task %}
+<option value="{{tas.id}}">{{tas}} </action>
+{% endfor %}
+</select>
+
+<label for="id_category2">Category: </label>
+<select name="category2" required id="id_category2">
+{% for tas in cate %}
+<option value="{{tas.id}}">{{tas}} </action>
+{% endfor %}
+</select> {% endcomment %}

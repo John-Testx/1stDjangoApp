@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-4">
+        <h1 class="display-1">Tasks</h1>
+    </div>
+</div>
+
+<div class="row ms-3 justify-content-center">
+    {% include  'tasksby.html' %}
+    <div class="col-8">
+    {% for task in tasks%}
+            <div class="row">
+                <div class="col-10 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% if task.important %}
+                                <a href="{% url 'taskDetail' task.id %}"><strong>{{task.getTitle}}</strong></a>
+                                {%  else %}
+                                <a href="{% url 'taskDetail' task.id %}">{{task.getTitle}}</a>
+                                {% endif %}
+                            </h5>
+                            <p class="card-text">{{task.getDescription}}</p>
+                            <p class="card-text">By: {{task.getUser.username}}</p>
+                            <p class="card-text">{{task.getDateCompleted|date:'M j Y:i'}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

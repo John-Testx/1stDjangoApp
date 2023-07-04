@@ -1,0 +1,38 @@
+{% comment %} {% load i18n %} {% endcomment %}
+
+{%block content%}
+<div class="col-4 ">
+    <h4>Tasks</h4>
+    <div class="row">
+        <div class="col-12">
+            <a class="text-decoration-none" href="{% url 'usertask' %}">Tasks pending</a>
+        </div>
+        <div class="col-12">
+            <a class="text-decoration-none" href="{% url 'task_end' %}">Tasks completed</a>
+        </div>
+    </div>
+    
+    <h4 class="mt-3">Categories</h4>
+    <div class="row">
+        <div class="col-12">
+            <a class="text-decoration-none" href="{% url 'showCate' %}">Your Categories</a>
+        </div>
+        <div class="col-12">
+            <a class="text-decoration-none" href="{% url 'addtask_incateg' %}">Add task to category</a>
+        </div>
+    </div>
+
+    <h4 class="mt-3">Groups</h4>
+    <div class="row">
+        <div class="col-12">
+            <a class="text-decoration-none" href="{% url 'creategroup' %}">Create group</a>
+        </div>
+        <div class="col-12">
+            <a class="text-decoration-none" href="{% url 'creategroup' %}">Manage group</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% comment %} {% include 'taskscate.html'%}  {% endcomment %}
+{% comment %} {% include  'category.html' with cat %} {% endcomment %}
