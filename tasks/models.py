@@ -10,7 +10,7 @@ class Xtorage(models.Model):
     upload = models.FileField(upload_to="example/")
 
 def user_directory_path(instance, filename):
-    return "example/user_{0}/{1}".format(instance.user.id, filename)
+    return "example/user_{0}{2}/{1}".format(instance.user.id, filename, instance.task.id)
 
 class Task(models.Model):
     title = models.CharField(max_length=100)
