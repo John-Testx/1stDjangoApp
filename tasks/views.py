@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.db import IntegrityError
-from .forms import TaskForm,CateForm, CateTaskForm
+from .forms import TaskForm,CateForm, CateTaskForm ,groupfornothing
 from .models import Task , CategoryTest, CategoryTestTask 
 from django.utils import timezone 
 from django.contrib.auth.decorators import login_required
@@ -171,7 +171,10 @@ def category(request):
 
 @login_required
 def createGroup(request):
-    return render(request, 'creategroup.html')
+    x= groupfornothing()
+    return render(request, 'create_group.html', {
+        'form': x,
+    })
 
 
 @login_required
