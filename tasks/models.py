@@ -10,7 +10,7 @@ class Xtorage(models.Model):
     upload = models.FileField(upload_to="example/")
 
 def user_directory_path(instance, filename):
-    return "user_{0}/{1}".format(instance.user.id, filename)
+    return "example/user_{0}/{1}".format(instance.user.id, filename)
 
 class Task(models.Model):
     title = models.CharField(max_length=100)
@@ -58,13 +58,8 @@ class CategoryTestTask(models.Model):
 
 
 
-# class GroupTaskTest(models.Model):
-#     title = models.CharField(max_length=100)
-#     description = models.TextField(blank=True)
-#     created = models.DateTimeField(auto_now_add=True)
-#     duedate = models.DateTimeField()
-#     datecompleted = models.DateTimeField(null=True, blank=True)
-#     important = models.BooleanField(default= False)
+# class GroupUsers(models.Model):
+#     members = models.ForeignKey(User, on_delete=models.CASCADE)
 #     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 # class UserTask(models.Model):
