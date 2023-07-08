@@ -19,7 +19,7 @@ class Task(models.Model):
     datecompleted = models.DateTimeField(null=True, blank=True)
     important = models.BooleanField(default= False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    filetask = models.FileField(upload_to= user_directory_path, null=True) 
+    filetask = models.FileField(upload_to= user_directory_path, null=True, blank=True) 
     
     def __str__(self):
         return self.title + " -by: " + self.user.username

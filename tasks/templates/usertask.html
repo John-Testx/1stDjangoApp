@@ -17,9 +17,11 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 {% if task.important %}
-                                <a href="{% url 'taskDetail' task.id %}"><strong>{{task.getTitle}}</strong></a>
+                                <a class="text-decoration-none" href="{% url 'taskDetail' task.id %}">
+                                    <strong> ⭐ {{task.getTitle}}</strong>
+                                </a>
                                 {%  else %}
-                                <a href="{% url 'taskDetail' task.id %}">{{task.getTitle}}</a>
+                                <a class="text-decoration-none" href="{% url 'taskDetail' task.id %}">{{task.getTitle}}</a>
                                 {% endif %}
                             </h5>
                             <p class="card-text">{{task.getDescription}}</p>
