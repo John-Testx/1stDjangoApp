@@ -32,9 +32,11 @@ urlpatterns = [
     path('tasks/<int:task_id>/complete',views.taskComplete, name="completeTask"),
     path('tasks/<int:task_id>/delete',views.taskDelete, name="deleteTask"),
     
-    path('tasks/yourcate/',views.category, name="showCate"),
+    path('tasks/categories/',views.category, name="categories"),
     path('tasks/addtasktocate/',views.category_in_task, name="addtask_incateg"),
     path('tasks/create/cate/',views.createCategory, name="createcate"),
+    path('tasks/categories/<int:category_id>/delete',views.deleteCategory, name="deleteCategory"),
+    
     path('tasks/create/group/',views.createGroup, name="creategroup"),
     path('tasks/manage/group/<int:group_id>/delete',views.deleteGroup, name="deleteGroup"),
     path('tasks/manage/group/',views.showGroup, name="managegroup"),

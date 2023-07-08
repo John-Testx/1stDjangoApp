@@ -15,15 +15,6 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'home.html')
 
-def deleteCategory(request, cate_id):
-    category = get_object_or_404(CategoryTest, pk=cate_id, userName=request.user)
-    if request.method == 'POST':
-        category.delete()
-        return redirect('usertask')
-
-def updateCategory(request, category):    
-    return render(request, 'create_category.html')
-
 def signup(request):    
     if request.method == 'GET':
         print( 'Sending form registration')
@@ -141,6 +132,9 @@ def taskDelete(request, task_id):
     if request.method == 'POST':
         task.delete()
         return redirect('usertask')
+    
+#categories here
+    
 @login_required
 def createCategory(request):   
     if request.method == 'GET':
@@ -154,7 +148,7 @@ def createCategory(request):
             new_cate.userName = request.user
             new_cate.save()
             print(new_cate)
-            return redirect('usertask')
+            return redirect('categories')
         except ValueError:
             return render(request, 'create_category.html',{
             'form': CateForm,
@@ -172,13 +166,17 @@ def category(request):
 #     return render(request, 'usertask.html',
 #     {'cate': cate})
 
-# @login_required
-# def createGroup(request):
-#     x= groupfornothing()
-#     return render(request, 'create_group.html', {
-#         'form': x,
-#     })
+@login_required
+def deleteCategory(request, category_id):
+    category = get_object_or_404(CategoryTest, pk=category_id, userName=request.user)
+    print(category)
+    if request.method == 'POST':
+        category.delete()
+        return redirect('categories')
 
+@login_required
+def updateCategory(request, category):    
+    return render(request, 'create_category.html')
 
 @login_required
 def category_in_task(request):
@@ -205,6 +203,14 @@ def category_in_task(request):
             'cate':cate
         })
 
+
+
+
+#groups here
+
+
+
+
 def showGroup(request):
     g = GroupMembers.objects.filter(person=request.user)
     return render (request, 'manage_group.html' , {'groups':g,})
@@ -213,13 +219,14 @@ def deleteGroup(request, group_id):
     group = get_object_or_404(GroupUsers, pk=group_id)
     if request.method == 'POST':
         group.delete()
-        return redirect('usertask')
+        return redirect('managegroup')
     
 def modifyGroup(request, group_id):
     if request.method == 'GET':
         group = get_object_or_404(GroupUsers , pk= group_id)
+        members = GroupMembers.objects.filter(group=group_id)
         form = GroupForm(instance=group) 
-        return render (request, 'group_detail.html' , {'form':form})
+        return render (request, 'group_detail.html' , {'form':form , 'members':members})
     else:
         group = get_object_or_404(GroupUsers,pk= group_id)
         form= GroupForm(request.POST, instance=group)
@@ -232,25 +239,13 @@ def createGroup(request):
     
     else:
         try:
-            group = Group.objects.create(name=request.POST['name'])
-
-            user = request.user 
-            user.groups.add(group) 
-            user.save() 
-            
-            content_type = ContentType.objects.get_for_model(Task)
-            add_permission = Permission.objects.get(content_type=content_type, codename='add_task') # obtener el permiso de agregar tasks
-            change_permission = Permission.objects.get(content_type=content_type, codename='change_task') # obtener el permiso de cambiar tasks
-            delete_permission = Permission.objects.get(content_type=content_type, codename='delete_task') # obtener el permiso de eliminar tasks
-            view_permission = Permission.objects.get(content_type=content_type, codename='view_task') # obtener el permiso de ver tasks
-
-            user.user_permissions.add(add_permission, change_permission, delete_permission, view_permission) # asignar los permisos al usuario
-            user.save() # guardar los cambios
-
-            group.permissions.add(add_permission, change_permission, delete_permission, view_permission) # asignar los permisos al grupo
+            group = GroupUsers.objects.create(name=request.POST['name'])
             group.save() # guardar los cambios
+
+            xuser = GroupMembers.objects.create(group=group,person=request.user)  
+            xuser.save() 
             
-            return render (request,"create_group.html", {"form": GroupForm, "error":e}) #Ingresar directorio de seccion grupos
+            return redirect('managegroup') #Ingresar directorio de seccion grupos
         except Exception as e:
             return render (request,"create_group.html", {"form": GroupForm, "error":e})
 

@@ -15,7 +15,7 @@ class TaskForm(forms.ModelForm):
 class GroupForm(forms.ModelForm):
     class Meta:
         model = GroupUsers
-        fields = ['name']   
+        fields = ['name',]   
     
 class CateForm(forms.ModelForm):
     class Meta:

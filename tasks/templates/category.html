@@ -1,20 +1,43 @@
 {% extends 'base.html' %}
+
 {% block content%}
 
 <main class="container py-5">
     <div class="row">
-        <div class="col-2">
-            <button class="btn btn-success">
-                <a class="text-decoration-none text-white" href="{% url 'createcate' %}">+ Add Category</a>
-            </button>
-        </div>
         <div class="col-6">
-            <ul class="list-group">
-                <li class="list-group-item"><h6>Categories List</h6></li>
-                {% for cat in cate %}
-                <li class="list-group-item">{{ cat.Name }}</li>
-                {%endfor%}
-            </ul>
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <div class="row">
+                        <div class="col">
+                            <h6>Categories List</h6>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-success btn-sm">
+                                <a class="text-decoration-none text-white" href="{% url 'createcate' %}">+ Add Category</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    {% for cat in cate %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col">
+                                <h6>{{ cat.Name }}</h6>
+                            </div>
+                            <div class="col">
+                                <form action="{% url 'deleteCategory' cat.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-danger btn-sm">
+                                        <a class="text-decoration-none text-white">Delete Category</a>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                    {%endfor%}
+                </ul>
+            </div>
         </div>
     </div>
 </main>
