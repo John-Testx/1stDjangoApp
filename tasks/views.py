@@ -1,9 +1,10 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-from django.contrib.auth import login,logout,authenticate
+from django.contrib.auth.models import User , Group , Permission
+from django.contrib.auth import login,logout,authenticate 
 from django.db import IntegrityError
-from .forms import TaskForm,CateForm, CateTaskForm ,groupfornothing
+from django.contrib.contenttypes.models import ContentType
+from .forms import TaskForm,CateForm, CateTaskForm ,groupfornothing, GroupForm
 from .models import Task , CategoryTest, CategoryTestTask 
 from django.utils import timezone 
 from django.contrib.auth.decorators import login_required
@@ -117,6 +118,8 @@ def task_detail(request, task_id):
     else:
         try:
             task = get_object_or_404(Task, pk=task_id ,user= request.user)
+            # task.filetask = request.POST['filetask'] or task.filetask
+            # task.save()
             form= TaskForm(request.POST, instance=task)
             form.save()
             return redirect('usertask')
@@ -169,12 +172,12 @@ def category(request):
 #     return render(request, 'usertask.html',
 #     {'cate': cate})
 
-@login_required
-def createGroup(request):
-    x= groupfornothing()
-    return render(request, 'create_group.html', {
-        'form': x,
-    })
+# @login_required
+# def createGroup(request):
+#     x= groupfornothing()
+#     return render(request, 'create_group.html', {
+#         'form': x,
+#     })
 
 
 @login_required
@@ -201,6 +204,37 @@ def category_in_task(request):
             'task':task,
             'cate':cate
         })
+
+def createGroup(request):
+    if request.method == 'GET': 
+        return render (request,"create_group.html", {"form": GroupForm})
+    
+    else:
+        try:
+            group = Group.objects.create(name=request.POST['name'])
+
+            user = request.user 
+            user.groups.add(group) 
+            user.save() 
+            
+            content_type = ContentType.objects.get_for_model(Task)
+            add_permission = Permission.objects.get(content_type=content_type, codename='add_task') # obtener el permiso de agregar tasks
+            change_permission = Permission.objects.get(content_type=content_type, codename='change_task') # obtener el permiso de cambiar tasks
+            delete_permission = Permission.objects.get(content_type=content_type, codename='delete_task') # obtener el permiso de eliminar tasks
+            view_permission = Permission.objects.get(content_type=content_type, codename='view_task') # obtener el permiso de ver tasks
+
+            user.user_permissions.add(add_permission, change_permission, delete_permission, view_permission) # asignar los permisos al usuario
+            user.save() # guardar los cambios
+
+            group.permissions.add(add_permission, change_permission, delete_permission, view_permission) # asignar los permisos al grupo
+            group.save() # guardar los cambios
+            
+            return render (request,"create_group.html", {"form": GroupForm, "error":e}) #Ingresar directorio de seccion grupos
+        except Exception as e:
+            return render (request,"create_group.html", {"form": GroupForm, "error":e})
+
+
+
 
 # task inside category
     # task = Task.objects.filter(user=request.user)

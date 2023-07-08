@@ -6,12 +6,17 @@ from django.contrib.auth.models import Group
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title','description','important']
+        fields = ['title','description','important', 'filetask']
         widgets = {
             'title':forms.TextInput(attrs={'class':'form-control ','placeholder':'write a title'}),
             'description':forms.Textarea(attrs={'class':'form-control ','placeholder':'write a title'})
         }
         
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']   
+    
 class CateForm(forms.ModelForm):
     class Meta:
         model = CategoryTest

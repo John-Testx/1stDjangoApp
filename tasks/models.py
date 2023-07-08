@@ -10,7 +10,7 @@ class Xtorage(models.Model):
     upload = models.FileField(upload_to="example/")
 
 def user_directory_path(instance, filename):
-    return "example/user_{0}{2}/{1}".format(instance.user.id, filename, instance.task.id)
+    return "example/user_{0}/{1}".format(instance.user.id, filename)
 
 class Task(models.Model):
     title = models.CharField(max_length=100)
@@ -19,7 +19,7 @@ class Task(models.Model):
     datecompleted = models.DateTimeField(null=True, blank=True)
     important = models.BooleanField(default= False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    filetask = models.FileField(upload_to=user_directory_path, null=True) 
+    filetask = models.FileField(upload_to= user_directory_path, null=True) 
     
     def __str__(self):
         return self.title + " -by: " + self.user.username
@@ -31,6 +31,12 @@ class Task(models.Model):
         return self.datecompleted
     def getUser(self):
         return self.user
+    
+class TaskGroup(models.Model):
+    title = models.CharField(max_length=100)
+    
+    
+    
     
 class CategoryTest(models.Model):
     Name = models.CharField(max_length=100)
