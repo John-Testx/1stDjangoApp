@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<button class="btn btn-dark btn-sm text-white mt-3">
+    <a class="text-decoration-none py-1 text-white" href="{% url 'usertask' %}"> ⬅ Back</a>
+</button>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-3">
+                                    <h6>Your Groups</h6>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-success btn-sm">
+                                        <a class="text-decoration-none text-white" href="{% url 'creategroup' %}">➕ Create Group</a>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            {% for x in groups %}
+                            <li class="list-group-item bg-dark text-white">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5><a class="text-decoration-none text-danger" href="{% url 'modifyGroup' x.group.id %}">{{x.group.name}}</a></h5>
+                                    </div>
+                                    <div class="col">
+                                        <form action="{% url 'deleteGroup' x.group.id %}" method="POST">
+                                            {% csrf_token %}
+                                        <button class="btn btn-danger btn-sm">✖ Delete Group</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
