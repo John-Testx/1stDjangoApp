@@ -47,6 +47,7 @@ class GroupMembers(models.Model):
     
     def __str__(self):
         return self.person.username + ' belongs to: ' + self.group.name 
+    
 # class TaskGroup(models.Model):
 #     title = models.CharField(max_length=100)
 #     groupu = models.ForeignKey(GroupUsers, on_delete=models.CASCADE, related_name='task_groups')

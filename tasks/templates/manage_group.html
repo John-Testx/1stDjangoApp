@@ -23,14 +23,29 @@
                             </div>
                         </div>
                         <ul class="list-group list-group-flush">
-                            {% for x in groups %}
+                            {% for z in groups %}
                             <li class="list-group-item bg-dark text-white">
                                 <div class="row">
                                     <div class="col">
-                                        <h5><a class="text-decoration-none text-danger" href="{% url 'modifyGroup' x.group.id %}">{{x.group.name}}</a></h5>
+                                        <h5>
+                                            <a class="text-decoration-none text-danger" href="{% url 'modifyGroup' z.group.id %}">{{z.group.name}}</a>
+                                        </h5>
+                                        <div class="card">
+                                            <div class="card-header bg-secondary text-white">Members
+                                            </div>
+                                            <div class="card card-body">
+                                                {% for a in members %}
+                                                    {% for i in a %}
+                                                        {% if i.group.id == z.group.id %}
+                                                            {{i.person.username}}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col">
-                                        <form action="{% url 'deleteGroup' x.group.id %}" method="POST">
+                                        <form action="{% url 'deleteGroup' z.group.id %}" method="POST">
                                             {% csrf_token %}
                                         <button class="btn btn-danger btn-sm">✖ Delete Group</button>
                                         </form>

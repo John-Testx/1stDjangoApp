@@ -213,7 +213,11 @@ def category_in_task(request):
 
 def showGroup(request):
     g = GroupMembers.objects.filter(person=request.user)
-    return render (request, 'manage_group.html' , {'groups':g,})
+    members = []
+    for x in g:
+        xmembers = GroupMembers.objects.filter(group=x.group)
+        members.append(xmembers)
+    return render (request, 'manage_group.html' , {'groups':g,'members':members})
 
 def deleteGroup(request, group_id):
     group = get_object_or_404(GroupUsers, pk=group_id)
