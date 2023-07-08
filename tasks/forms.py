@@ -1,6 +1,6 @@
 from django import forms
-from .models import Task, CategoryTest, CategoryTestTask
-from django.contrib.auth.models import Group
+from .models import Task, CategoryTest, CategoryTestTask, GroupUsers, GroupMembers 
+# from django.contrib.auth.models import Group
 
 
 class TaskForm(forms.ModelForm):
@@ -14,7 +14,7 @@ class TaskForm(forms.ModelForm):
         
 class GroupForm(forms.ModelForm):
     class Meta:
-        model = Group
+        model = GroupUsers
         fields = ['name']   
     
 class CateForm(forms.ModelForm):
@@ -34,8 +34,4 @@ class CateTaskForm(forms.ModelForm):
         self.fields['category'].queryset = CategoryTest.objects.filter(userName=user)
         self.fields['task'].queryset = Task.objects.filter(user=user)
 
-class groupfornothing(forms.ModelForm):
-    class Meta:
-        model = Group
-        fields = ['name','permissions']
         

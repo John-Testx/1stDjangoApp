@@ -31,12 +31,25 @@ class Task(models.Model):
         return self.datecompleted
     def getUser(self):
         return self.user
+        
+class GroupUsers(models.Model):
+    name = models.CharField(max_length=128)
+    members = models.ManyToManyField(User, through="GroupMembers")
     
-class TaskGroup(models.Model):
-    title = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+
+class GroupMembers(models.Model):
+    person = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(GroupUsers, on_delete=models.CASCADE, related_name='group_members')
+    date_joined = models.DateTimeField(auto_now_add=True)
+    invite_reason = models.CharField(max_length=64, null=True)
     
-    
-    
+    def __str__(self):
+        return self.person.username + ' belongs to: ' + self.group.name 
+# class TaskGroup(models.Model):
+#     title = models.CharField(max_length=100)
+#     groupu = models.ForeignKey(GroupUsers, on_delete=models.CASCADE, related_name='task_groups')
     
 class CategoryTest(models.Model):
     Name = models.CharField(max_length=100)

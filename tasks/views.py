@@ -4,8 +4,8 @@ from django.contrib.auth.models import User , Group , Permission
 from django.contrib.auth import login,logout,authenticate 
 from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
-from .forms import TaskForm,CateForm, CateTaskForm ,groupfornothing, GroupForm
-from .models import Task , CategoryTest, CategoryTestTask 
+from .forms import TaskForm,CateForm, CateTaskForm , GroupForm
+from .models import Task , CategoryTest, CategoryTestTask, GroupMembers, GroupUsers 
 from django.utils import timezone 
 from django.contrib.auth.decorators import login_required
 
@@ -204,6 +204,27 @@ def category_in_task(request):
             'task':task,
             'cate':cate
         })
+
+def showGroup(request):
+    g = GroupMembers.objects.filter(person=request.user)
+    return render (request, 'manage_group.html' , {'groups':g,})
+
+def deleteGroup(request, group_id):
+    group = get_object_or_404(GroupUsers, pk=group_id)
+    if request.method == 'POST':
+        group.delete()
+        return redirect('usertask')
+    
+def modifyGroup(request, group_id):
+    if request.method == 'GET':
+        group = get_object_or_404(GroupUsers , pk= group_id)
+        form = GroupForm(instance=group) 
+        return render (request, 'group_detail.html' , {'form':form})
+    else:
+        group = get_object_or_404(GroupUsers,pk= group_id)
+        form= GroupForm(request.POST, instance=group)
+        form.save()
+        return redirect('managegroup')
 
 def createGroup(request):
     if request.method == 'GET': 
