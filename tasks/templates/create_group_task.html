@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+<button class="btn btn-dark btn-sm text-white mt-3">
+    <a class="text-decoration-none py-1 text-white" href="{% url 'managegroup' %}"> ⬅ Back</a>
+</button>
+<main class="container py-2">
+    <div class="card">
+        <div class="card card-body">
+            <h1>Create Group Task</h1>
+            {{error}}
+            <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+        
+                <button> Save </button>
+            </form>        
+        </div>
+    </div>
+</main>
+{% endblock %}

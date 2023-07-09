@@ -223,7 +223,8 @@ def modifyGroup(request, group_id):
         members = GroupMembers.objects.filter(group=group_id)
         tasks = TaskGroup.objects.filter(group=group_id)
         form = GroupForm(instance=group) 
-        return render (request, 'group_detail.html' , {'form':form , 'members':members, 'tasks':tasks})
+        return render (request, 'group_detail.html' , {'form':form , 'members':members,
+        'tasks':tasks, 'group':group_id, 'cgroup':group})
     else:
         group = get_object_or_404(GroupUsers,pk= group_id)
         form= GroupForm(request.POST, instance=group)
@@ -259,6 +260,26 @@ def createGroup(request):
             return redirect('managegroup') #Ingresar directorio de seccion grupos
         except Exception as e:
             return render (request,"create_group.html", {"form": GroupForm, "error":e})
+
+def createGroupTask(request,group_id):
+    if request.method == 'GET':
+        return render(request, 'create_group_task.html', {
+            'form': TaskGroupForm
+        })
+    else:
+        try:
+            group= GroupUsers.objects.get(pk=group_id)
+            grouptask= TaskGroup.objects.create(title=request.POST['title'],
+                                                description=request.POST['description'],
+                                                coment=request.POST['coment'],
+                                                group=group)
+            grouptask.save()
+            return redirect('managegroup')
+        except ValueError:
+            return render(request, 'create_task.html', {
+            'form': TaskForm,
+            'error':'Please provide valid data'
+        })
 
 @login_required
 def task_group_detail(request, taskgroup_id):

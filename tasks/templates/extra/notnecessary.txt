@@ -11,3 +11,56 @@
 <option value="{{tas.id}}">{{tas}} </action>
 {% endfor %}
 </select> {% endcomment %}
+
+# path('tasks/manage/group/task/comment/<int:taskgroup_id>/',views.modifyGroup, name="sendComment"),
+
+
+
+<div class="col-md-9 ">
+    <div class="row">
+{% for x in tasks %}
+        <div class="col-12 mb-3">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <a class="text-decoration-none text-white" href="{% url 'groupTaskDetail' x.id %}">
+                        <strong> {{x.title}}</strong>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Description:  {{x.description}}</p>
+                    <p class="card-text">{{x.datecompleted|date:'M j Y:i'}}</p>
+                </div>
+            </div>
+        </div>
+{% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#homepage
+<div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+            <h1 class="fw-normal">App Description</h1>
+        </button>
+      </h2>
+      <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+        <div class="accordion-body bg-dark text-white">
+            <p class="mt-3" style="text-align: justify; text-justify: inter-word;">This project is a task manager application, which allows the user to manage tasks and subdivide them by categories as well as the option to manage a group and enter members to perform tasks together as a group, as a last thing the application is made from the Django framework and the Python language.</p>
+        </div>
+      </div>
+    </div>
+</div>

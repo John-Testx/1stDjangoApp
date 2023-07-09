@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="row mt-3">
+    <div class="row mt-3 justify-content between">
         <div class="col-5">
             <div class="card">
                 <div class="card card-body text-white bg-secondary">
@@ -10,7 +10,8 @@
                         {% csrf_token %}
                         <div class="row align-items-end">
                             <div class="col">
-                                {{form}}
+                                <label for="id_name">Current Group Name:</label>
+                                <input type="text" name="name" value="{{cgroup.name}}" class="form-control" placeholder="Enter name of group" maxlength="128" required="" id="id_name">
                             </div>
                             <div class="col">
                                 <button class="btn btn-dark p-1"> ✏️ Change Name </button>
@@ -20,9 +21,14 @@
                 </div>
             </div>
         </div>
+        <div class="col-5">
+            <button class="btn">
+                <a class="text-decoration-none py-1 text-dark" href="{% url 'createGroupTask' group %}">➕ Create Group Task </a>
+            </button>
+        </div>
+    
     </div>
-
-    <div class="row mt-3 ">
+    <div class="row mt-3 justify-content-between">
         <div class="col-3">
             <div class="card">
                 <div class="card-header bg-secondary text-white">Members</div>
@@ -33,21 +39,23 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-7 mx-auto">
-            <div class="card">
-                <div class="card-header bg-secondary text-white">Group Tasks</div>
-                {% for x in tasks %}
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a class="text-decoration-none" href="{% url 'groupTaskDetail' x.id %}">
-                            <strong> {{x.title}}</strong>
-                        </a>
-                    </h5>
-                    <p class="card-text">{{x.description}}</p>
-                    <p class="card-text">{{x.coment}}</p>
-                    <p class="card-text">{{x.datecompleted|date:'M j Y:i'}}</p>
+        <div class="col-8 mx-auto">
+            <div class="row">
+        {% for x in tasks %}
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="card-header bg-dark">
+                            <a class="text-decoration-none text-white" href="{% url 'groupTaskDetail' x.id %}">
+                                <strong> {{x.title}}</strong>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Description:  {{x.description}}</p>
+                            <p class="card-text">{{x.datecompleted|date:'M j Y:i'}}</p>
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
+        {% endfor %}
             </div>
         </div>
     </div>
