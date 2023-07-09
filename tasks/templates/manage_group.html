@@ -31,17 +31,18 @@
                                             <a class="text-decoration-none text-danger" href="{% url 'modifyGroup' z.group.id %}">{{z.group.name}}</a>
                                         </h5>
                                         <div class="card">
-                                            <div class="card-header bg-secondary text-white">Members
-                                            </div>
-                                            <div class="card card-body">
+                                            <div class="card-header bg-secondary text-white">👥 Members </div>
+                                            <ul class="list-group list-group-flush">
                                                 {% for a in members %}
                                                     {% for i in a %}
                                                         {% if i.group.id == z.group.id %}
+                                                        <li class="list-group-item bg-dark text-white p-0">
                                                             {{i.person.username}}
+                                                        </li>
                                                         {% endif %}
                                                     {% endfor %}
                                                 {% endfor %}
-                                            </div>
+                                            </ul>
                                         </div>
                                     </div>
                                     <div class="col">

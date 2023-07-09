@@ -4,7 +4,7 @@ from django.contrib.auth.models import User , Group , Permission
 from django.contrib.auth import login,logout,authenticate 
 from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
-from .forms import TaskForm,CateForm, CateTaskForm , GroupForm
+from .forms import TaskForm, CateForm, CateTaskForm, GroupForm,GroupMembersForm 
 from .models import Task , CategoryTest, CategoryTestTask, GroupMembers, GroupUsers 
 from django.utils import timezone 
 from django.contrib.auth.decorators import login_required
@@ -157,9 +157,32 @@ def createCategory(request):
             
 @login_required        
 def category(request):
-    cate = CategoryTest.objects.filter(userName=request.user).order_by('Name')
-    return render(request, 'category.html',
-    {'cate': cate})
+    if request.method == 'GET':
+        cateform = CateTaskForm()
+        cateform.filtx(request.user)
+        cate = CategoryTest.objects.filter(userName=request.user).order_by('Name')
+        taskcate = []
+        for x in cate:
+            xcate = CategoryTestTask.objects.filter(category=x)
+            taskcate.append(xcate)
+        return render(request, 'category.html',
+        {'cate': cate, 'task': taskcate , 'form':cateform })
+    else:
+        try:
+            form = CateTaskForm(request.POST)
+            form.save()
+            return redirect('categories')
+        
+        except ValueError:
+            cateform = CateTaskForm()
+            cateform.filtx(request.user)
+            cate = CategoryTest.objects.filter(userName=request.user).order_by('Name')
+            taskcate = []
+            for x in cate:
+                xcate = CategoryTestTask.objects.filter(category=x)
+                taskcate.append(xcate)
+            return render(request, 'category.html',
+            {'cate': cate, 'task': taskcate , 'form':cateform, 'error':'the task you selected is already in the category'})
     
 # def categoriesavailable(request):   no la utilizare todavía, no funciona 
 #     cate = CategoryTest.objects.filter(userName=request.user).order_by('Name')
@@ -177,33 +200,6 @@ def deleteCategory(request, category_id):
 @login_required
 def updateCategory(request, category):    
     return render(request, 'create_category.html')
-
-@login_required
-def category_in_task(request):
-    if request.method == 'GET':
-        x = CateTaskForm()
-        x.filtx(request.user)
-        return render(request, 'taskscate.html',{
-            'form':x }
-        )
-    else:
-        try:
-            form = CateTaskForm(request.POST)
-            save_cate = form.save(commit=False)
-            save_cate.save()
-            print(save_cate)
-            return redirect('usertask')
-        except ValueError:
-            task = Task.objects.filter(user=request.user)
-            cate = CategoryTest.objects.filter(userName=request.user)
-            return render(request, 'taskscate.html',{
-            'form': CateForm,
-            'error':'Please provide valid data',
-            'task':task,
-            'cate':cate
-        })
-
-
 
 
 #groups here
@@ -239,15 +235,29 @@ def modifyGroup(request, group_id):
 
 def createGroup(request):
     if request.method == 'GET': 
-        return render (request,"create_group.html", {"form": GroupForm})
-    
+        form = GroupMembersForm()
+        form.filtmember(request.user) 
+                
+        return render (request,"create_group.html", {"form": GroupForm, '2ndform': form})
     else:
         try:
+            listmembers = []
             group = GroupUsers.objects.create(name=request.POST['name'])
             group.save() # guardar los cambios
-
-            xuser = GroupMembers.objects.create(group=group,person=request.user)  
+            
+            tal = request.POST.getlist('members')
+            
+            for x in tal:
+                member= User.objects.get(pk=x)
+                listmembers.append(member)
+            
+            xuser = GroupMembers.objects.create(group=group,person=request.user) 
             xuser.save() 
+            # print(listmembers)
+            
+            for nmember in listmembers:
+                xmember = GroupMembers.objects.create(group=group,person=nmember)
+                xmember.save()                 
             
             return redirect('managegroup') #Ingresar directorio de seccion grupos
         except Exception as e:

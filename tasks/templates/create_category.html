@@ -2,16 +2,18 @@
 
 {% block content%}
 <div class="container">
-    <h1>Create your category</h1>
-    {{ error }}
-    <form method="POST">
-        {% csrf_token %}
-        {{ form }}
+    <div class="row">
+        <div class="col-md-6 mt-3 bg-secondary rounded">
+            <h1 class="display-6">Create your category</h1>
+            {{ error }}
+            <form method="POST">
+                {% csrf_token %}
+                {{ form }}
+                
+                <button class="btn btn-dark mt-3 mb-3">Save category</button>
         
-        <button class="btn btn-dark mt-3">
-            Save category
-        </button>
-
-    </form>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -5,18 +5,18 @@
     <a class="text-decoration-none py-1 text-white" href="{% url 'usertask' %}"> ⬅ Back</a>
 </button>
 
-<main class="container py-4">
+<main class="container ">
     <div class="row">
-        <div class="col-6">
+        <div class="col-md-6 py-4">
             <div class="card">
                 <div class="card-header bg-secondary text-white">
                     <div class="row">
                         <div class="col">
-                            <h6>Categories List</h6>
+                            <h6> 🗂️ Categories List</h6>
                         </div>
                         <div class="col">
                             <button class="btn btn-success btn-sm">
-                                <a class="text-decoration-none text-white" href="{% url 'createcate' %}">+ Add Category</a>
+                                <a class="text-decoration-none text-white" href="{% url 'createcate' %}">➕ Add Category</a>
                             </button>
                         </div>
                     </div>
@@ -27,12 +27,23 @@
                         <div class="row">
                             <div class="col">
                                 <h6>{{ cat.Name }}</h6>
+                                <div class="row">
+                                {% for ltask in task %}
+                                    {% for name in ltask %}
+                                        {% if cat.Name == name.category.Name %}
+                                        <div class="col-12">
+                                            <a class="text-decoration-none" href="{% url 'taskDetail' name.task.id %}">{{ name.task }}</a>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                </div>
                             </div>
                             <div class="col">
                                 <form action="{% url 'deleteCategory' cat.id %}" method="POST">
                                     {% csrf_token %}
                                     <button class="btn btn-danger btn-sm">
-                                        <a class="text-decoration-none text-white">Delete Category</a>
+                                        <a class="text-decoration-none text-white">❌ Delete </a>
                                     </button>
                                 </form>
                             </div>
@@ -40,6 +51,24 @@
                     </li>
                     {%endfor%}
                 </ul>
+            </div>
+        </div>
+        <div class="col-md-6 py-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <div class="row">
+                        <div class="col">
+                            <h6> Add 📝 Task into 🗂️ Categories</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{form}}
+                        <button class="btn btn-success mt-3"> Add ✅</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -33,7 +33,6 @@ urlpatterns = [
     path('tasks/<int:task_id>/delete',views.taskDelete, name="deleteTask"),
     
     path('tasks/categories/',views.category, name="categories"),
-    path('tasks/addtasktocate/',views.category_in_task, name="addtask_incateg"),
     path('tasks/create/cate/',views.createCategory, name="createcate"),
     path('tasks/categories/<int:category_id>/delete',views.deleteCategory, name="deleteCategory"),
     
