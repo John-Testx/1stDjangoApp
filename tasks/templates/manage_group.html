@@ -8,14 +8,14 @@
     <div class="row mt-3">
         <div class="col-12">
             <div class="row">
-                <div class="col-6">
+                <div class="col-7 mx-1">
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-md-3">
                                     <h6>Your Groups</h6>
                                 </div>
-                                <div class="col">
+                                <div class="col-md-6">
                                     <button class="btn btn-success btn-sm">
                                         <a class="text-decoration-none text-white" href="{% url 'creategroup' %}">➕ Create Group</a>
                                     </button>
@@ -26,31 +26,93 @@
                             {% for z in groups %}
                             <li class="list-group-item bg-dark text-white">
                                 <div class="row">
-                                    <div class="col">
-                                        <h5>
-                                            <a class="text-decoration-none text-danger" href="{% url 'modifyGroup' z.group.id %}">{{z.group.name}}</a>
-                                        </h5>
-                                        <div class="card">
-                                            <div class="card-header bg-secondary text-white">👥 Members </div>
-                                            <ul class="list-group list-group-flush">
-                                                {% for a in members %}
-                                                    {% for i in a %}
-                                                        {% if i.group.id == z.group.id %}
-                                                        <li class="list-group-item bg-dark text-white p-0">
-                                                            {{i.person.username}}
-                                                        </li>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% endfor %}
-                                            </ul>
+                                    <div class="col-12">
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <h5><a class="text-decoration-none text-danger" href="{% url 'modifyGroup' z.group.id %}">{{z.group.name}}</a></h5>
+                                            </div>
+                                            {% for index in members %}
+                                            {% for per in index %}
+                                                {% if per.person == user %}
+                                                    {% if per.charge == 'Leader' %}
+                                                    <div class="col-md-3">
+                                                        <form action="{% url 'deleteGroup' z.group.id %}" method="POST">
+                                                            {% csrf_token %}
+                                                        <button class="btn btn-danger btn-sm">✖ Delete Group</button>
+                                                        </form>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="col-md-3">
+                                                        <form method="POST">
+                                                            {% csrf_token %}
+                                                        <button class="btn btn-sm" style="background-color: orange"> Exit group</button>
+                                                        </form>
+                                                    </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                        </div>
+                                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                                            <div class="accordion-item">
+                                              <h2 class="accordion-header">
+                                                <button class="accordion-button bg-secondary text-white collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{z.group.id}}x" aria-expanded="false" aria-controls="{{z.group.id}}x">
+                                                    👥 Members 
+                                                </button>
+                                              </h2>
+                                              <div id="{{z.group.id}}x" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                                <div class="accordion-body bg-dark">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-dark mb-0 rounded table-bordered ">
+                                                            <thead>
+                                                              <tr>
+                                                                <th scope="col">Username</th>
+                                                                <th scope="col">Charge</th>
+                                                              </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for a in members %}
+                                                                {% for i in a %}
+                                                                    {% if i.group.id == z.group.id %}
+                                                                    <tr>
+                                                                        <td>{{i.person.username}}</td>
+                                                                        {% if i.charge == 'Leader' %}
+                                                                        <td>{{i.charge}}</td>
+                                                                        {% else %}
+                                                                        <td></td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endfor %}
+                                                            </tbody>
+                                                          </table>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <form action="{% url 'deleteGroup' z.group.id %}" method="POST">
+                                        <form class="row g-3" action="{% url 'addMembers' z.group.id%}" method="POST">
                                             {% csrf_token %}
-                                        <button class="btn btn-danger btn-sm">✖ Delete Group</button>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 mb-1">
+                                                        <label for="find" class="mb-0 mt-3">Name of the user you want to add: </label>
+                                                        <button type="button" class="btn text-white btn-sm btn-secondary g-0 p-0" data-toggle="tooltip" data-placement="top" title="The add button will only work if the user exists">❔</button>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-control " type="text" name="find" placeholder="username" id="find">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <button class="btn btn-primary" id="Add" name="action" value="add_member"> Add </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </form>
                                     </div>
+                                
                                 </div>
                             </li>
                             {% endfor %}

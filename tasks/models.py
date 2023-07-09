@@ -43,10 +43,15 @@ class GroupMembers(models.Model):
     person = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(GroupUsers, on_delete=models.CASCADE, related_name='group_members')
     date_joined = models.DateTimeField(auto_now_add=True)
-    invite_reason = models.CharField(max_length=64, null=True)
+    charge = models.CharField(max_length=64, null=True)
     
     def __str__(self):
-        return self.person.username + ' belongs to: ' + self.group.name                                 
+        if self.charge == 'Leader':
+            return self.person.username + ' is leader of ' + self.group.name
+        elif self.charge == 'Member':
+            return self.person.username + ' belongs to: ' + self.group.name
+        else:
+            return self.person.username + ' belongs to: ' + self.group.name                                   
     def getPerson(self):
         return self.person
     def getGroup(self):

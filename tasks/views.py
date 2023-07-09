@@ -9,6 +9,7 @@ from .models import Task , CategoryTest, CategoryTestTask, GroupMembers, GroupUs
 from django.utils import timezone 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.contrib import messages
 
 # Create your views here.
 
@@ -219,12 +220,13 @@ def deleteGroup(request, group_id):
     
 def modifyGroup(request, group_id):
     if request.method == 'GET':
+        user= User.objects.get(username=request.user.username)
         group = get_object_or_404(GroupUsers , pk= group_id)
         members = GroupMembers.objects.filter(group=group_id)
         tasks = TaskGroup.objects.filter(group=group_id)
         form = GroupForm(instance=group) 
         return render (request, 'group_detail.html' , {'form':form , 'members':members,
-        'tasks':tasks, 'group':group_id, 'cgroup':group})
+        'tasks':tasks, 'group':group_id, 'cgroup':group, 'user':user})
     else:
         group = get_object_or_404(GroupUsers,pk= group_id)
         form= GroupForm(request.POST, instance=group)
@@ -233,33 +235,54 @@ def modifyGroup(request, group_id):
 
 def createGroup(request):
     if request.method == 'GET': 
-        form = GroupMembersForm()
-        form.filtmember(request.user) 
+        # form = GroupMembersForm()
+        # form.filtmember(request.user) 
                 
-        return render (request,"create_group.html", {"form": GroupForm, '2ndform': form})
+        return render (request,"create_group.html", {"form": GroupForm})
     else:
         try:
-            listmembers = []
+            # listmembers = []
             group = GroupUsers.objects.create(name=request.POST['name'])
             group.save() # guardar los cambios
             
-            tal = request.POST.getlist('members')
+            # tal = request.POST.getlist('members')
             
-            for x in tal:
-                member= User.objects.get(pk=x)
-                listmembers.append(member)
+            # for x in tal:
+            #     member= User.objects.get(pk=x)
+            #     listmembers.append(member)
             
             xuser = GroupMembers.objects.create(group=group,person=request.user) 
             xuser.save() 
             # print(listmembers)
             
-            for nmember in listmembers:
-                xmember = GroupMembers.objects.create(group=group,person=nmember)
-                xmember.save()                 
+            # for nmember in listmembers:
+            #     xmember = GroupMembers.objects.create(group=group,person=nmember)
+            #     xmember.save()                 
             
             return redirect('managegroup') #Ingresar directorio de seccion grupos
         except Exception as e:
             return render (request,"create_group.html", {"form": GroupForm, "error":e})
+
+def addMembers(request,group_id):
+    grupo = get_object_or_404(GroupUsers, pk=group_id)
+    
+    if request.method=="POST":
+        try:
+            buscar = request.POST.get("find")
+                    
+            if buscar:
+                        
+                usuario= User.objects.get(username = buscar )
+                print (usuario)
+                
+                if  usuario is not None:
+                    xmember = GroupMembers.objects.create(group=grupo,person=usuario)
+                    xmember.save() 
+                                    
+            return redirect('managegroup')
+        except Exception as e:
+            return redirect('managegroup')
+    
 
 def createGroupTask(request,group_id):
     if request.method == 'GET':
@@ -307,6 +330,8 @@ def task_group_detail(request, taskgroup_id):
         except ValueError:
             return render(request, 'usertaskdetail.html',
             {'task':task , 'form':form , 'error': 'Error updating task'})
+
+
 
 # def sendCommentary(request, taskgroup_id):
 #     task = get_object_or_404(TaskGroup, pk=taskgroup_id)

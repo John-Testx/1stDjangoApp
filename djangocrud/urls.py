@@ -41,5 +41,6 @@ urlpatterns = [
     path('tasks/manage/group/<int:group_id>/delete',views.deleteGroup, name="deleteGroup"),
     path('tasks/manage/group/',views.showGroup, name="managegroup"),
     path('tasks/create/group/task/<int:group_id>/create/',views.createGroupTask, name="createGroupTask"),
+    path("tasks/manage/group/<int:group_id>/addMembers",views.addMembers, name="addMembers"),
     path('tasks/manage/group/<int:group_id>/modify',views.modifyGroup, name="modifyGroup"),
 ]
