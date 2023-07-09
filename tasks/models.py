@@ -46,11 +46,28 @@ class GroupMembers(models.Model):
     invite_reason = models.CharField(max_length=64, null=True)
     
     def __str__(self):
-        return self.person.username + ' belongs to: ' + self.group.name 
+        return self.person.username + ' belongs to: ' + self.group.name                                 
+    def getPerson(self):
+        return self.person
+    def getGroup(self):
+        return self.group 
     
-# class TaskGroup(models.Model):
-#     title = models.CharField(max_length=100)
-#     groupu = models.ForeignKey(GroupUsers, on_delete=models.CASCADE, related_name='task_groups')
+class TaskGroup(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    datecompleted = models.DateTimeField(null=True, blank=True)
+    coment= models.TextField(blank=True)
+    group = models.ForeignKey(GroupUsers, on_delete=models.CASCADE, related_name='task_groups')
+    
+    def __str__(self):
+        return self.title + ' by: ' + self.group.name
+    def getTitle(self):
+        return self.title
+    def getDescription(self):
+        return self.description
+    def getComent(self):
+        return self.coment
     
 class CategoryTest(models.Model):
     Name = models.CharField(max_length=100)

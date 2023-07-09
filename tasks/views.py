@@ -1,14 +1,14 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User , Group , Permission
-from django.contrib.auth import login,logout,authenticate 
+from django.contrib.auth.models import User
+from django.contrib.auth import login,logout,authenticate
+from django.http import HttpResponseRedirect 
 from django.db import IntegrityError
-from django.contrib.contenttypes.models import ContentType
-from .forms import TaskForm, CateForm, CateTaskForm, GroupForm,GroupMembersForm 
-from .models import Task , CategoryTest, CategoryTestTask, GroupMembers, GroupUsers 
+from .forms import TaskForm, CateForm, CateTaskForm, GroupForm,GroupMembersForm,TaskGroupForm
+from .models import Task , CategoryTest, CategoryTestTask, GroupMembers, GroupUsers,TaskGroup
 from django.utils import timezone 
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
 
 # Create your views here.
 
@@ -184,10 +184,6 @@ def category(request):
             return render(request, 'category.html',
             {'cate': cate, 'task': taskcate , 'form':cateform, 'error':'the task you selected is already in the category'})
     
-# def categoriesavailable(request):   no la utilizare todavía, no funciona 
-#     cate = CategoryTest.objects.filter(userName=request.user).order_by('Name')
-#     return render(request, 'usertask.html',
-#     {'cate': cate})
 
 @login_required
 def deleteCategory(request, category_id):
@@ -225,8 +221,9 @@ def modifyGroup(request, group_id):
     if request.method == 'GET':
         group = get_object_or_404(GroupUsers , pk= group_id)
         members = GroupMembers.objects.filter(group=group_id)
+        tasks = TaskGroup.objects.filter(group=group_id)
         form = GroupForm(instance=group) 
-        return render (request, 'group_detail.html' , {'form':form , 'members':members})
+        return render (request, 'group_detail.html' , {'form':form , 'members':members, 'tasks':tasks})
     else:
         group = get_object_or_404(GroupUsers,pk= group_id)
         form= GroupForm(request.POST, instance=group)
@@ -263,16 +260,52 @@ def createGroup(request):
         except Exception as e:
             return render (request,"create_group.html", {"form": GroupForm, "error":e})
 
+@login_required
+def task_group_detail(request, taskgroup_id):
+    if request.method == 'GET':
+        task = get_object_or_404(TaskGroup, pk=taskgroup_id)
+        form = TaskGroupForm(instance=task)
+        form.onlyComentView() 
+        return render(request, 'group_taskdetail.html',{'task':task , 'form':form})
+    else:
+        try:
+            task = get_object_or_404(TaskGroup, pk=taskgroup_id)
+            comment = task.coment
+            if request.POST['yourcoment'] != '':
+                new_comment= f"{comment}\n{request.user.username}: {request.POST['yourcoment']}"
+                form= TaskGroupForm(request.POST, instance=task)
+                form.save()
+                task.coment= new_comment
+                task.save()
+            elif request.POST['yourcoment'] == '':
+                form= TaskGroupForm(request.POST, instance=task)
+                form.save()
+                task.coment= comment
+                task.save()
+            return redirect('managegroup')
+        except ValueError:
+            return render(request, 'usertaskdetail.html',
+            {'task':task , 'form':form , 'error': 'Error updating task'})
 
-
-
-# task inside category
-    # task = Task.objects.filter(user=request.user)
-    # cate = CategoryTest.objects.filter(userName=request.user)
-    # task = get_object_or_404(Task, pk=request.POST['task2'] ,user= request.user)
-    # categ= get_object_or_404(CategoryTest, pk=request.POST['category2'] ,userName= request.user)          
-    # xs = CategoryTestTask()
-    # xs.task = task
-    # xs.category = categ
-    # xs.save()
-# task inside category end
+# def sendCommentary(request, taskgroup_id):
+#     task = get_object_or_404(TaskGroup, pk=taskgroup_id)
+#     if request.method == 'POST':
+#         comment = task.coment
+#         if request.POST['yourcoment'] != '':
+#             new_comment= f"{comment}\n{request.user.username}: {request.POST['yourcoment']}"
+#             task.coment= new_comment
+#             task.save()
+#             return HttpResponseRedirect(request.path_info)
+#         elif request.POST['yourcoment'] == '':
+#             task.coment= comment
+#             task.save()
+#             return HttpResponseRedirect(request.path_info)
+    
+# def FindMember(request):
+#     buscar = request.GET.get("find")
+#     usuario = User.objects.filter(username = True)
+#     if buscar:
+#         usuario= User.objects.filter(
+#             Q(username = buscar)
+#         )
+#     return render (request,"create_group.html", {"user":usuario})

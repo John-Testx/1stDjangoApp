@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, CategoryTest, CategoryTestTask, GroupUsers, GroupMembers 
+from .models import Task, CategoryTest, CategoryTestTask, GroupUsers, GroupMembers, TaskGroup
 from django.contrib.auth.models import User
 
 
@@ -12,6 +12,19 @@ class TaskForm(forms.ModelForm):
             'description':forms.Textarea(attrs={'class':'form-control ','placeholder':'write a title'})
         }
         
+class TaskGroupForm(forms.ModelForm):
+    class Meta:
+        model = TaskGroup
+        fields = ['title','description','coment']
+        widgets = {
+            'title':forms.TextInput(attrs={'class':'form-control ','placeholder':'write a title'}),
+            'description':forms.Textarea(attrs={'class':'form-control ','placeholder':'write a title'}),
+            'coment':forms.Textarea(attrs={'class':'form-control '})
+        }
+        
+    def onlyComentView(self):
+        self.fields['coment'].disabled = True
+                
 class GroupForm(forms.ModelForm):
     class Meta:
         model = GroupUsers

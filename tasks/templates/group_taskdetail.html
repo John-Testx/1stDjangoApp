@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<button class="btn btn-dark btn-sm text-white mx-1 mt-3">
+    <a class="text-decoration-none py-1 text-white" href="{% url 'modifyGroup' task.group.id %}"> ⬅ Back</a>
+</button>
+<main class="container py-2">
+    <div class="card">
+        <div class="card card-body">
+            <h4>Task name: {{ task.title }}</h4>
+            {{error}}
+            
+            <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label for="yourcoment"> write a message: </label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control mt-0 mb-2" type="text" name="yourcoment" id="yourcoment"> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-dark mt-3 d-grid gap-2"> Update </button>
+                </div>
+            </form>
+{% comment %} 
+            <div class="row mt-3">
+                <div class="col-md-2 mx-1">
+                    <form action="{% url 'completeTask' task.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-success">Mark completed </button>
+                    </form>
+                </div>
+                <div class="col-md-2 mx-1">
+                    <form action="{% url 'deleteTask' task.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-danger"> Delete </button>
+                    </form>
+                </div>
+            </div> {% endcomment %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+
+
+{% comment %} <div class="row ">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-body">
+                <form class="row" action="{% url 'sendComment' task.id %}" method="POST">
+                    <div class="col-3">
+                        <label for="yourcoment"> write a message: </label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control mt-0 mb-2" type="text" name="yourcoment" id="yourcoment"> 
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-dark mt-3"> Send </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> {% endcomment %}
