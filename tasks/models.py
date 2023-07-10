@@ -56,6 +56,8 @@ class GroupMembers(models.Model):
         return self.person
     def getGroup(self):
         return self.group 
+    def setCharge(self, charge):
+        self.charge = charge
     
 class TaskGroup(models.Model):
     title = models.CharField(max_length=100)

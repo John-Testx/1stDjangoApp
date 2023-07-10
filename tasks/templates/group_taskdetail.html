@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<button class="btn btn-dark btn-sm text-white mx-1 mt-3">
+<button class="btn btn-dark btn-sm text-white mx-4 mt-3">
     <a class="text-decoration-none py-1 text-white" href="{% url 'modifyGroup' task.group.id %}"> ⬅ Back</a>
 </button>
 <main class="container py-2">
@@ -15,18 +15,23 @@
                 {% csrf_token %}
                 {{form.as_p}}
 
-                <div class="row">
+                <div class="row ">
                     <div class="col-md-7">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-3">
-                                        <label for="yourcoment"> write a message: </label>
+                                <form class="row" action="{% url 'sendComment' task.id %}" method="POST">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label for="yourcoment"> write a message: </label>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <input class="form-control mt-0 mb-2" type="text" name="yourcoment" id="yourcoment"> 
+                                            <button class="btn btn-dark mx-2 mt-0 mb-2"> Send </button>
+                                        </div>
                                     </div>
-                                    <div class="col-9">
-                                        <input class="form-control mt-0 mb-2" type="text" name="yourcoment" id="yourcoment"> 
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -56,23 +61,4 @@
 
 {% endblock %}
 
-
-{% comment %} <div class="row ">
-    <div class="col-md-7">
-        <div class="card">
-            <div class="card-body">
-                <form class="row" action="{% url 'sendComment' task.id %}" method="POST">
-                    <div class="col-3">
-                        <label for="yourcoment"> write a message: </label>
-                    </div>
-                    <div class="col-9">
-                        <input class="form-control mt-0 mb-2" type="text" name="yourcoment" id="yourcoment"> 
-                    </div>
-                    <div class="col-3">
-                        <button class="btn btn-dark mt-3"> Send </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> {% endcomment %}
+ 

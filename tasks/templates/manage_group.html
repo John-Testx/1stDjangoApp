@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<button class="btn btn-dark btn-sm text-white mt-3">
+<button class="btn btn-dark btn-sm  mx-4 text-white mt-3">
     <a class="text-decoration-none py-1 text-white" href="{% url 'usertask' %}"> ⬅ Back</a>
 </button>
 
-    <div class="row mt-3">
+    <div class="row mt-3 mx-3">
         <div class="col-12">
             <div class="row">
-                <div class="col-7 mx-1">
+                <div class="col-md-7 mx-1">
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
@@ -34,20 +34,22 @@
                                             {% for index in members %}
                                             {% for per in index %}
                                                 {% if per.person == user %}
-                                                    {% if per.charge == 'Leader' %}
-                                                    <div class="col-md-3">
-                                                        <form action="{% url 'deleteGroup' z.group.id %}" method="POST">
-                                                            {% csrf_token %}
-                                                        <button class="btn btn-danger btn-sm">✖ Delete Group</button>
-                                                        </form>
-                                                    </div>
-                                                    {% else %}
-                                                    <div class="col-md-3">
-                                                        <form method="POST">
-                                                            {% csrf_token %}
-                                                        <button class="btn btn-sm" style="background-color: orange"> Exit group</button>
-                                                        </form>
-                                                    </div>
+                                                    {% if per.group.id == z.group.id %}
+                                                        {% if per.charge == 'Leader' %}
+                                                        <div class="col-md-3">
+                                                            <form action="{% url 'deleteGroup' z.group.id %}" method="POST">
+                                                                {% csrf_token %}
+                                                            <button class="btn btn-danger btn-sm">✖ Delete Group</button>
+                                                            </form>
+                                                        </div>
+                                                        {% elif per.charge != 'Leader' %}
+                                                        <div class="col-md-3">
+                                                            <form action="{% url 'exitGroup' z.group.id %}" method="POST">
+                                                                {% csrf_token %}
+                                                            <button class="btn btn-sm" style="background-color: orange"> Exit group</button>
+                                                            </form>
+                                                        </div>
+                                                        {% endif %}
                                                     {% endif %}
                                                 {% endif %}
                                             {% endfor %}
@@ -102,7 +104,7 @@
                                                         <label for="find" class="mb-0 mt-3">Name of the user you want to add: </label>
                                                         <button type="button" class="btn text-white btn-sm btn-secondary g-0 p-0" data-toggle="tooltip" data-placement="top" title="The add button will only work if the user exists">❔</button>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-3">
                                                         <input class="form-control " type="text" name="find" placeholder="username" id="find">
                                                     </div>
                                                     <div class="col-md-6">

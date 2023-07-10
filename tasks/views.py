@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.http import HttpResponseRedirect 
+from django.urls import reverse
 from django.db import IntegrityError
 from .forms import TaskForm, CateForm, CateTaskForm, GroupForm,GroupMembersForm,TaskGroupForm
 from .models import Task , CategoryTest, CategoryTestTask, GroupMembers, GroupUsers,TaskGroup
@@ -203,7 +204,7 @@ def updateCategory(request, category):
 
 
 
-
+@login_required
 def showGroup(request):
     g = GroupMembers.objects.filter(person=request.user)
     members = []
@@ -212,12 +213,14 @@ def showGroup(request):
         members.append(xmembers)
     return render (request, 'manage_group.html' , {'groups':g,'members':members})
 
+@login_required
 def deleteGroup(request, group_id):
     group = get_object_or_404(GroupUsers, pk=group_id)
     if request.method == 'POST':
         group.delete()
         return redirect('managegroup')
-    
+
+@login_required    
 def modifyGroup(request, group_id):
     if request.method == 'GET':
         user= User.objects.get(username=request.user.username)
@@ -233,6 +236,7 @@ def modifyGroup(request, group_id):
         form.save()
         return redirect('managegroup')
 
+@login_required
 def createGroup(request):
     if request.method == 'GET': 
         # form = GroupMembersForm()
@@ -251,7 +255,8 @@ def createGroup(request):
             #     member= User.objects.get(pk=x)
             #     listmembers.append(member)
             
-            xuser = GroupMembers.objects.create(group=group,person=request.user) 
+            xuser = GroupMembers.objects.create(group=group,person=request.user)
+            xuser.setCharge('Leader')
             xuser.save() 
             # print(listmembers)
             
@@ -263,6 +268,7 @@ def createGroup(request):
         except Exception as e:
             return render (request,"create_group.html", {"form": GroupForm, "error":e})
 
+@login_required
 def addMembers(request,group_id):
     grupo = get_object_or_404(GroupUsers, pk=group_id)
     
@@ -282,8 +288,15 @@ def addMembers(request,group_id):
             return redirect('managegroup')
         except Exception as e:
             return redirect('managegroup')
-    
 
+def deleteGroupTask(request,taskgroup_id):
+    taskgroup= TaskGroup.objects.get(pk=taskgroup_id)
+    # group = GroupUsers.objects.get(pk=taskgroup.group.id)
+    if request.method == "POST":
+        taskgroup.delete()
+        return redirect('managegroup')
+    
+@login_required
 def createGroupTask(request,group_id):
     if request.method == 'GET':
         return render(request, 'create_group_task.html', {
@@ -331,21 +344,28 @@ def task_group_detail(request, taskgroup_id):
             return render(request, 'usertaskdetail.html',
             {'task':task , 'form':form , 'error': 'Error updating task'})
 
+@login_required
+def exitGroup(request,group_id):
+    group= GroupUsers.objects.get(pk=group_id)
+    member=GroupMembers.objects.get(group=group,person=request.user)
+    if request.method == 'POST':
+        member.delete()
+        return redirect('managegroup')
+        
 
-
-# def sendCommentary(request, taskgroup_id):
-#     task = get_object_or_404(TaskGroup, pk=taskgroup_id)
-#     if request.method == 'POST':
-#         comment = task.coment
-#         if request.POST['yourcoment'] != '':
-#             new_comment= f"{comment}\n{request.user.username}: {request.POST['yourcoment']}"
-#             task.coment= new_comment
-#             task.save()
-#             return HttpResponseRedirect(request.path_info)
-#         elif request.POST['yourcoment'] == '':
-#             task.coment= comment
-#             task.save()
-#             return HttpResponseRedirect(request.path_info)
+def sendCommentary(request, taskgroup_id):
+    task = get_object_or_404(TaskGroup, pk=taskgroup_id)
+    if request.method == 'POST':
+        comment = task.coment
+        if request.POST['yourcoment'] != '':
+            new_comment= f"{comment}\n{request.user.username}: {request.POST['yourcoment']}"
+            task.coment= new_comment
+            task.save()
+            return HttpResponseRedirect(request.path_info)
+        elif request.POST['yourcoment'] == '':
+            task.coment= comment
+            task.save()
+            return HttpResponseRedirect(request.path_info)
     
 # def FindMember(request):
 #     buscar = request.GET.get("find")

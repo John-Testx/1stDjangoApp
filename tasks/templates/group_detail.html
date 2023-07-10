@@ -45,9 +45,19 @@
                 <div class="col-12 mb-3">
                     <div class="card">
                         <div class="card-header bg-dark">
-                            <a class="text-decoration-none text-white" href="{% url 'groupTaskDetail' x.id %}">
-                                <strong> {{x.title}}</strong>
-                            </a>
+                            <div class="row">
+                                <div class="col">
+                                    <a class="text-decoration-none text-white" href="{% url 'groupTaskDetail' x.id %}">
+                                        <strong> {{x.title}}</strong>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <form action="{% url 'groupTaskDelete' x.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-dark text-decoration-none mx-5 text-white"><strong> ⛔ Delete</strong></button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <p class="card-text">Description:  {{x.description}}</p>
