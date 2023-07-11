@@ -283,6 +283,7 @@ def addMembers(request,group_id):
                 
                 if  usuario is not None:
                     xmember = GroupMembers.objects.create(group=grupo,person=usuario)
+                    xmember.setCharge('Member')
                     xmember.save() 
                                     
             return redirect('managegroup')

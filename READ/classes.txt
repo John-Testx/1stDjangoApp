@@ -1,0 +1,91 @@
+class Task Tasks_Task
+title:str
+description:str
+important:boolean
+filetask:str(filepath)
+Methods
+- __str__(): str
+- getTitle(): str
+- getDescription(): str
+- getDateCompleted(): DateTime
+- getUser(): User
+
+Class GroupUsers Tasks_Task
+name: str
+members: List GroupMembers
+Methods
+- __str__(): str
+- getName(): str
+
+Class GroupMembers
+person: User
+group: GroupUsers
+date_joined: date
+charge: str 
+Methods
+- __str__(): str
+- getPerson(): User
+- getGroup(): GroupUsers
+- getCharge(): str
+- setCharge(charge: str)
+
+class User django.models.User
+username
+first_name
+last_name
+email
+password
+groups
+user_permissions
+is_staff
+is_active
+is_superuser
+last_login
+date_joined
+
+Methods
+get_username()
+get_full_name()
+get_short_name()
+set_password(raw_password)
+check_password(raw_password)
+set_unusable_password()
+has_usable_password()
+get_user_permissions(obj=None)
+get_group_permissions(obj=None)
+get_all_permissions(obj=None)
+has_perm(perm, obj=None)
+has_module_perms(package_name)
+email_user(subject, message, from_email=None, **kwargs)
+
+TaskGroup:
+title: str
+description: str
+created: str
+datecompleted: date
+coment: str
+group: GroupUsers
+Methods
++ __str__(): str
++ getTitle(): str
++ getDescription(): str
++ getComent(): str
+
+CategoryTest:
+Name: str
+userName: User
+Methods
++ __str__(): str
++ getName(): str
++ getUserName(): User
+
+CategoryTestTask:
+category: CategoryTest
+task: Task
+Methods
++ __str__(): str
++ getTask(): Task
++ getCategory(): CategoryTest
+
+
+

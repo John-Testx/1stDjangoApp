@@ -1,0 +1,6 @@
+1.-Señorita junto al informe le he dejado adjunto el product Backlog modificado a partir 
+de lo que realizamos en la App, nuestro product Backlog original estaba mal planteado ya
+que no sabriamos lo que iba a ser trabajar con este Framework.
+2.-Para ejecutar la App puede hacerlo desde el archivo .bat que esta adentro de la carpeta
+'Django Crud Tasks, Groups, Categories' llamado 'Gestor_1.0.bat' o traves de su acceso directo.
+3.-Por cierto la APP esta en ingles.

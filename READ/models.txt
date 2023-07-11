@@ -1,0 +1,33 @@
+Task:
+- title: CharField
+- description: TextField
+- created: DateTimeField
+- datecompleted: DateTimeField
+- important: BooleanField
+- user: ForeignKey(User)
+- filetask: FileField
+
+GroupUsers:
+- name: CharField
+
+GroupMembers:
+- person: ForeignKey(User)
+- group: ForeignKey(GroupUsers)
+- date_joined: DateTimeField
+- charge: CharField
+
+TaskGroup:
+- title: CharField
+- description: TextField
+- created: DateTimeField
+- datecompleted: DateTimeField
+- coment: TextField
+- group: ForeignKey(GroupUsers)
+
+CategoryTest:
+- Name: CharField
+- userName: ForeignKey(User)
+
+CategoryTestTask:
+- category: ForeignKey(CategoryTest)
+- task: ForeignKey(Task)

@@ -38,6 +38,8 @@ class GroupUsers(models.Model):
     
     def __str__(self):
         return self.name
+    def getName(self):
+        return self.name
 
 class GroupMembers(models.Model):
     person = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -48,14 +50,14 @@ class GroupMembers(models.Model):
     def __str__(self):
         if self.charge == 'Leader':
             return self.person.username + ' is leader of ' + self.group.name
-        elif self.charge == 'Member':
-            return self.person.username + ' belongs to: ' + self.group.name
         else:
             return self.person.username + ' belongs to: ' + self.group.name                                   
     def getPerson(self):
         return self.person
     def getGroup(self):
-        return self.group 
+        return self.group
+    def getCharge(self):
+        return self.charge  
     def setCharge(self, charge):
         self.charge = charge
     
